@@ -20,6 +20,7 @@
     (dispatch-to tube [:bad-book])
     (let [book-with-id (assoc book :_id (str (ObjectId.)))]
       (doall (map println (range 20000)))
+      ;; TODO Make this check if a cancel has come in on the same tube before inserting
       (mc/insert (db) coll book-with-id)
       (dispatch-to :all [:acknowledge-book-added book-with-id]))))
 
@@ -38,6 +39,7 @@
     (dispatch-to tube [:initialize-db-received book-data])))
 
 (defn cancel-add [tube _]
+  ;; TODO This may need to set an atom to stop the add. would need to be keyed to the tube I think.
   (println "Cancel add message received"))
 
 (def handlers
