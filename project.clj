@@ -33,9 +33,7 @@
                                                           re-frisk.preload]}}
 
                                :devtools {:http-root "resources/public"
-
-                                          :http-port 8280
-                                          }}}}
+                                          :http-port 8280}}}}
 
   :shell {:commands {"karma" {:windows         ["cmd" "/c" "karma"]
                               :default-command "karma"}

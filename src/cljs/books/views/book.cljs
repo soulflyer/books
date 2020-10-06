@@ -64,7 +64,9 @@
         [:p keywords]
         [:a {:href archive} "Archive-link"]
         (if @delete-button-visible
-          [:button {:on-click #(re-frame/dispatch [::events/delete-book _id])} "Delete"])]])))
+          (if true
+            [:button {:on-click #(re-frame/dispatch [::events/delete-book _id])} "Delete"]
+            [:button {:on-click #(re-frame/dispatch [::events/cancel-delete])} "Cancel"]))]])))
 
 (defn book-list []
   (let [visible-books (re-frame/subscribe [::subs/books])]

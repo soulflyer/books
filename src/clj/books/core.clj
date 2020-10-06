@@ -2,15 +2,16 @@
   (:require [books.handler :refer [handler]]
             [org.httpkit.server :as server]))
 
-(defonce server (atom nil))
+(defonce server-pid (atom nil))
 
+;; This is the websockets server
 (defn start-server []
-  (reset! server (server/run-server handler {:port 9091})))
+  (reset! server-pid (server/run-server #'handler {:port 9091})))
 
 (defn stop-server []
-  (when-not (nil? @server)
-    (@server)
-    (reset! server nil)))
+  (when-not (nil? @server-pid)
+    (@server-pid)
+    (reset! server-pid nil)))
 
 (defn -main [& args]
   (println "Running -main")

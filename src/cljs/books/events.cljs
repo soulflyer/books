@@ -34,7 +34,17 @@
   ::delete-book
   tubes/send-to-server
   (fn [db [_ book-id]]
+    (assoc db :deleting true)))
+
+(re-frame/reg-event-db
+  ::cancel-delete
+  (fn [db _]
     db))
+
+;; (re-frame/reg-event-db
+;;   ::book-deleted
+;;   (fn [db [_ _]]
+;;     (assoc db :deleting false)))
 
 (re-frame/reg-event-db
   ::show-add-book

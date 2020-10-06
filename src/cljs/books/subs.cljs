@@ -16,3 +16,8 @@
   ::show-add-book
   (fn [db]
     (:show-add-book db)))
+
+(re-frame/reg-sub
+  ::deleting
+  (fn [db]
+    (:deleting db)))

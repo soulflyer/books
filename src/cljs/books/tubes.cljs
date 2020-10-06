@@ -21,6 +21,11 @@
 ;; These are re-frame events received from the server
 
 (re-frame/reg-event-db
+  :bad-book
+  (fn [db _]
+    (.log js/console "*****Bad Book****")))
+
+(re-frame/reg-event-db
   :acknowledge-book-added
   (fn [db [_ book]]
     (assoc db :books (conj (:books db) book) )))
@@ -31,7 +36,16 @@
     (assoc db :books book-data)))
 
 (re-frame/reg-event-db
-  :remove-deleted-book
+  :remove-deleted-book-2
   (fn [db [_ book-id]]
     (.log js/console "Book ID: " book-id " to be deleted")
     (assoc db :books (remove #(= book-id (:_id %)) (:books db)))))
+
+(re-frame/reg-event-fx
+  :remove-deleted-book
+  (fn [{:keys [db]} [_ book-id]]
+    (.log js/console "Book ID: " book-id " to be deleted")
+    {:db {:books (remove #(= book-id (:_id %)) (:books db))
+          :deleting false}
+     ;;:dispatch [:books.events/book-deleted]
+     }))

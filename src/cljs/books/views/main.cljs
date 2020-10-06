@@ -13,9 +13,13 @@
 
 (defn main-panel []
   (let [name (re-frame/subscribe [::subs/name])
-        add-book-visible? (re-frame/subscribe [::subs/show-add-book])]
+        add-book-visible? (re-frame/subscribe [::subs/show-add-book])
+        deleting? (re-frame/subscribe [::subs/deleting])]
     [:<>
      [header]
      [:div#main
       (if @add-book-visible? [book-form])
-      [book-list]]]))
+      [book-list]
+      (if @deleting?
+        [:div#message
+         [:h2 "book being deleted"]])]]))

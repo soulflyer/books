@@ -25,3 +25,8 @@ h2,p,h3 {
     display: flex;
     flex-direction: column;
 }
+
+div#message {
+    margin: 5px;
+    padding:10px;
+    background: red;}
