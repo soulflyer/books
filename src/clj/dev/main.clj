@@ -8,3 +8,7 @@
 
 (defn stop-dev []
   (bc/stop-server))
+
+(defn restart []
+  (stop-dev)
+  (start-dev))
