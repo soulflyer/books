@@ -1,7 +1,8 @@
 (ns books.tubes
   (:require
    [re-frame.core :as re-frame]
-   [pneumatic-tubes.core :as tubes]))
+   [pneumatic-tubes.core :as tubes]
+   [books.subs :as subs]))
 
 (defn on-receive [event-v]
   (.log js/console "received from server:" (str event-v))
@@ -25,10 +26,13 @@
   (fn [db _]
     (.log js/console "*****Bad Book****")))
 
-(re-frame/reg-event-db
+ (re-frame/reg-event-db
   :acknowledge-book-added
   (fn [db [_ book]]
-    (assoc db :books (conj (:books db) book) )))
+    (let [only-serverside-books (re-frame/subscribe [::subs/server-side-books])]
+      (-> db
+        (assoc :books (conj @only-serverside-books book) )
+        (assoc :adding false)))))
 
 (re-frame/reg-event-db
   :initialize-db-received

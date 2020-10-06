@@ -13,6 +13,11 @@
     (:books db)))
 
 (re-frame/reg-sub
+  ::server-side-books
+  (fn [db]
+    (remove #(re-find #"^temp-id-" (:_id %)) (:books db))))
+
+(re-frame/reg-sub
   ::show-add-book
   (fn [db]
     (:show-add-book db)))
@@ -21,3 +26,8 @@
   ::deleting
   (fn [db]
     (:deleting db)))
+
+(re-frame/reg-sub
+  ::adding
+  (fn [db]
+    (:adding db)))

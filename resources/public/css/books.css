@@ -27,6 +27,8 @@ h2,p,h3 {
 }
 
 div#message {
+    display: flex;
+    justify-content: space-between;
     margin: 5px;
     padding:10px;
     background: red;}

@@ -19,12 +19,13 @@
   (if (= "abc" (:title book))
     (dispatch-to tube [:bad-book])
     (let [book-with-id (assoc book :_id (str (ObjectId.)))]
+      (doall (map println (range 20000)))
       (mc/insert (db) coll book-with-id)
       (dispatch-to :all [:acknowledge-book-added book-with-id]))))
 
 (defn delete-book [tube [_ book-id]]
   (mc/remove-by-id (db) coll book-id)
-  (doall (map println (range 20000)))
+  ;; (doall (map println (range 20000)))
   (dispatch-to :all [:remove-deleted-book book-id]))
 
 (defn set-name [tube [_ name]]
@@ -36,12 +37,16 @@
     (println book-data)
     (dispatch-to tube [:initialize-db-received book-data])))
 
+(defn cancel-add [tube _]
+  (println "Cancel add message received"))
+
 (def handlers
   {:books.events/set-name set-name
    :books.events/set-name-2 set-name
    :books.events/add-book add-book
    :books.events/delete-book delete-book
-   :books.events/initialize-db initialize-db})
+   :books.events/initialize-db initialize-db
+   :books.events/cancel-add cancel-add})
 
 (def wrapped-handlers (tubes/wrap-handlers handlers trace-middleware))
 
