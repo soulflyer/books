@@ -1,6 +1,7 @@
 (ns books.core
   (:require [books.handler :refer [handler]]
-            [org.httpkit.server :as server]))
+            [org.httpkit.server :as server])
+  (:gen-class))
 
 (defonce server-pid (atom nil))
 

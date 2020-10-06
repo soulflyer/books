@@ -54,7 +54,8 @@
 
 (defn book-item []
   (fn [{:keys [_id title author published archive keywords]}]
-    (let [delete-button-visible (re-frame/subscribe [::subs/show-add-book])]
+    (let [delete-button-visible (re-frame/subscribe [::subs/show-add-book])
+          deleting?             (re-frame/subscribe [::subs/deleting])]
       [:div.book
        [:h2
         title ]
@@ -64,9 +65,9 @@
         [:p keywords]
         [:a {:href archive} "Archive-link"]
         (if @delete-button-visible
-          (if true
-            [:button {:on-click #(re-frame/dispatch [::events/delete-book _id])} "Delete"]
-            [:button {:on-click #(re-frame/dispatch [::events/cancel-delete])} "Cancel"]))]])))
+          (if @deleting?
+            [:button {:on-click #(re-frame/dispatch [::events/cancel-delete])} "Cancel"]
+            [:button {:on-click #(re-frame/dispatch [::events/delete-book _id])} "Delete"]))]])))
 
 (defn book-list []
   (let [visible-books (re-frame/subscribe [::subs/books])]

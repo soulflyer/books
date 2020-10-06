@@ -45,7 +45,6 @@
   :remove-deleted-book
   (fn [{:keys [db]} [_ book-id]]
     (.log js/console "Book ID: " book-id " to be deleted")
-    {:db {:books (remove #(= book-id (:_id %)) (:books db))
-          :deleting false}
-     ;;:dispatch [:books.events/book-deleted]
-     }))
+    {:db (-> db
+           (assoc :books (remove #(= book-id (:_id %)) (:books db)))
+           (assoc :deleting false))}))

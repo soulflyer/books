@@ -24,11 +24,11 @@
 
 (defn delete-book [tube [_ book-id]]
   (mc/remove-by-id (db) coll book-id)
-  (doall (map println (range 100000)))
+  (doall (map println (range 20000)))
   (dispatch-to :all [:remove-deleted-book book-id]))
 
 (defn set-name [tube [_ name]]
-  (println "Name set to: " name "."))
+  (println "Name set to:" name))
 
 (defn initialize-db [tube _]
   (let [book-data (mc/find-maps (db) coll)]

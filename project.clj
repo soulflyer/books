@@ -58,12 +58,15 @@
   :repl-options {:init-ns dev.main
                  :nrepl-middleware [shadow.cljs.devtools.server.nrepl/middleware]}
 
+  :main books.core
+
   :profiles
   {:dev
    {:dependencies [[binaryage/devtools "1.0.2"]]
     :source-paths ["dev"]}
 
    :prod {}
-   }
+
+   :uberjar {:aot :all}}
 
   :prep-tasks [])

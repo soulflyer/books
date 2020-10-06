@@ -26,6 +26,7 @@
 
 (re-frame/reg-event-db
   ::add-book
+  ;; TODO Add the book to the local re-frame db using a temporary ID here
   tubes/send-to-server
   (fn [db [_ book]]
     db))
@@ -39,12 +40,8 @@
 (re-frame/reg-event-db
   ::cancel-delete
   (fn [db _]
-    db))
-
-;; (re-frame/reg-event-db
-;;   ::book-deleted
-;;   (fn [db [_ _]]
-;;     (assoc db :deleting false)))
+    ;; TODO Cleanup here. Delete the eagerly added book from the local re-frame db.
+    (assoc db :deleting false)))
 
 (re-frame/reg-event-db
   ::show-add-book
