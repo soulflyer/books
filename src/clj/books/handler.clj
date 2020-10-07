@@ -5,6 +5,8 @@
             [pneumatic-tubes.httpkit :as tubes-httpkit])
   (:import org.bson.types.ObjectId))
 
+(defonce cancel-add-requested (atom {}))
+
 (def tx (tubes/transmitter))
 (def dispatch-to (partial tubes/dispatch tx))
 
@@ -19,9 +21,11 @@
   (if (= "abc" (:title book))
     (dispatch-to tube [:bad-book])
     (let [book-with-id (assoc book :_id (str (ObjectId.)))]
-      (doall (map println (range 20000)))
+      (doall (map println (range 10000)))
       ;; TODO Make this check if a cancel has come in on the same tube before inserting
-      (mc/insert (db) coll book-with-id)
+      (if (get @cancel-add-requested tube)
+        (mc/insert (db) coll book-with-id)
+        (swap! cancel-add-requested assoc tube false))
       (dispatch-to :all [:acknowledge-book-added book-with-id]))))
 
 (defn delete-book [tube [_ book-id]]
@@ -40,6 +44,7 @@
 
 (defn cancel-add [tube _]
   ;; TODO This may need to set an atom to stop the add. would need to be keyed to the tube I think.
+  (swap! cancel-add-requested assoc tube true)
   (println "Cancel add message received"))
 
 (def handlers

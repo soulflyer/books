@@ -2,6 +2,7 @@
   (:require
    [re-frame.core :as re-frame]
    [books.db :as db]
+   [books.subs :as subs]
    [books.tubes :as tubes]))
 
 (defn allocate-temporary-id
@@ -52,11 +53,14 @@
     ;; TODO Cleanup here. Delete the eagerly added book from the local re-frame db.
     (assoc db :deleting false)))
 
-(re-frame/reg-event-db
+(re-frame/reg-event-fx
   ::cancel-add
-  tubes/send-to-server
-  (fn [db _]
-    (assoc db :adding false)))
+  (fn [{:keys [db]} e]
+    (let [server-side-books (re-frame/subscribe [::subs/server-side-books])]
+      {:send-to-server e
+       :db (-> db
+             (assoc :adding false)
+             (assoc :books @server-side-books))})))
 
 (re-frame/reg-event-db
   ::show-add-book
@@ -72,11 +76,3 @@
   ::toggle-add-book
   (fn [db [_ _]]
     (assoc db :show-add-book (not (:show-add-book db)))))
-
-;;Not used. Do I need this? Sub is probably enough.
-(re-frame/reg-event-db
-  ::remove-local-books
-  ;; This will remove all eagerly added books. This is ok, it shouldn't be possible to have more than one.
-  (fn [db _]
-    (assoc db :books
-           (remove #(re-find #"^temp-id-" (:_id %)) (:books db)))))
